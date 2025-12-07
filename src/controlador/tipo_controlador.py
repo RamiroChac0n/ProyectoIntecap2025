@@ -3,7 +3,7 @@ from flask_restx import Resource
 from src.comun.utilidades import db
 from src.modelo.tipo_modelo import TipoModelo
 from sqlalchemy.orm.exc import NoResultFound
-from src.esquemas.tipo_esquema import TipoEsquema, TipoEsquemaCreacion
+from src.esquemas.tipo_esquema import TipoEsquema
 from src.comun.utilidades import api
 from src.documentacion.tipo_documentacion import tipo_documentacion
 from marshmallow import ValidationError
@@ -62,56 +62,72 @@ class TipoControlador(Resource):
 
     #Read
     def get(self):
-        #select * from pokemon
-        tipos = db.session.execute(
-            db.select(TipoModelo)
-                                   ).scalars().all()
-        print(tipos)
-        return {'respuesta':'busqueda'},200
+        try:
+            #select * from tipo
+            tipos = db.session.execute(
+                db.select(TipoModelo)
+                                    ).scalars().all()
+
+            lista_json = TipoEsquema(many=True).dump(tipos)
+
+            return lista_json,200
+            
+        except Exception as err:
+            return {"mensaje":"Algo salió mal, intentalo denuevo."},503 
+        
     
     #Create
     @api.expect(tipo_documentacion)
     def post(self):
         try:
-            #crear tipo
+            #obtener tipo json
             tipo_json = request.json
 
             #validar reglas
-            tipo_esquema = TipoEsquemaCreacion()
+            tipo_esquema = TipoEsquema(exclude=['codigo_tipo'])
             tipo_validado = tipo_esquema.load(tipo_json)
-
-            tipo = TipoModelo(nombre=tipo_validado['nombre'])
-            db.session.add(tipo)
+            
+            db.session.add(tipo_validado)
             db.session.commit()
 
             #objeto de esquema
             tipo_esquema = TipoEsquema()
 
-            return tipo_esquema.dump(tipo),200
+            return tipo_esquema.dump(tipo_validado),200
         except ValidationError as err:
             print(err)
-            return {"mensaje":"No se pudo insertar porque no envio todos los campos de manera correcta"},422
+            mensajes_concatenados = " ".join([f"{clave}: {' '.join(mensajes)}" for clave, mensajes in err.messages_dict.items()])
+            return {"mensaje":mensajes_concatenados}, 422
         except Exception as err:
             print(err)
             return {"mensaje":"Algo salió mal, intentalo denuevo."},503 
         
     
     #Update
+    @api.expect(tipo_documentacion)
     def put(self):
         #objeto y lo validar
         #select * from TipoModelo where = 1
-        tipo_db = db.session.execute(db.select(TipoModelo).where(TipoModelo.codigo_tipo == 1)).scalar_one()
-        tipo_db.nombre = "Super fuego"
-        db.session.commit()
+        try:
+            #obtener tipo json
+            tipo_json = request.json
 
-        return {'respuesta':'Se actualizo'},200
+            #validando la entrada
+            tipo = TipoEsquema().load(tipo_json)
 
-    #Delete
-    def delete(self):
-        #busqueda
-        tipo_db = db.session.execute(db.select(TipoModelo).where(TipoModelo.codigo_tipo == 1)).scalar_one()
-        #eliminacion
-        db.session.delete(tipo_db)
-        db.session.commit()
+            #actualizando el campo
+            tipo_db = db.session.execute(db.select(TipoModelo).where(TipoModelo.codigo_tipo == tipo.codigo_tipo)).scalar_one()
+            tipo_db.nombre = tipo.nombre
+            db.session.commit()
 
-        return {'respuesta':'Se elimino'},200
+            return TipoEsquema().dump(tipo_db),200
+        except ValidationError as err:
+            print(err)
+            mensajes_concatenados = " ".join([f"{clave}: {' '.join(mensajes)}" for clave, mensajes in err.messages_dict.items()])
+            return {"mensaje":mensajes_concatenados}, 422
+        except NoResultFound as err:
+            print(err)
+            return {"mensaje":"No existe el tipo que intentas actualizar"},404
+        except Exception as err:
+            return {"mensaje":"Algo salió mal, intentalo denuevo."},503 
+        
