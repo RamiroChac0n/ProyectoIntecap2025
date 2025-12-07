@@ -10,5 +10,5 @@ class PokemonModelo(db.Model):
     nombre:Mapped[str] = mapped_column(String(200),nullable=False)
     descripcion:Mapped[str] = mapped_column(TEXT,nullable=True)
     nivel:Mapped[int] = mapped_column(Integer,nullable=True, default=1)
-    #MM-dd-yyyy T13:00:00
+    #MM-dd-yyyy
     fecha_creacion:Mapped[date] = mapped_column(Date,nullable=True, default=date)

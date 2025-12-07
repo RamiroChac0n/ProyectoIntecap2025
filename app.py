@@ -1,6 +1,6 @@
 
 from flask import Flask
-from src.comun.utilidades import db,api
+from src.comun.utilidades import db,api, ma
 from src.rutas.rutas import RutasGeneral
 
 app = Flask(__name__)
@@ -18,6 +18,7 @@ RutasGeneral(api)
 
 db.init_app(app)
 api.init_app(app)
+ma.init_app(app)
 
 
     
