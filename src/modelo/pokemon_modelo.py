@@ -2,6 +2,9 @@ from sqlalchemy import Integer, String, TEXT, Date
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import date
 from src.comun.utilidades import db
+from typing import List
+from src.modelo.tipo_modelo import TipoModelo
+from src.modelo.pokemon_x_tipo_modelo import PokemonXTipoModelo
 
 
 class PokemonModelo(db.Model):
@@ -12,3 +15,5 @@ class PokemonModelo(db.Model):
     nivel:Mapped[int] = mapped_column(Integer,nullable=True, default=1)
     #MM-dd-yyyy
     fecha_creacion:Mapped[date] = mapped_column(Date,nullable=False, default=date.today)
+
+    tipos:Mapped[List[TipoModelo]] = db.relationship(secondary='pokemon_x_tipo')

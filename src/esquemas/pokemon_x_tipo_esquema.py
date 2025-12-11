@@ -24,6 +24,5 @@ class PokemonXTipoEsquema(ma.SQLAlchemyAutoSchema):
             }
     )
 
-
     
 

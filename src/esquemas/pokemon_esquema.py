@@ -1,11 +1,13 @@
 from src.comun.utilidades import ma
 from marshmallow import fields, validate
 from src.modelo.pokemon_modelo import PokemonModelo
+from src.esquemas.tipo_esquema import TipoEsquema
 
 class PokemonEsquema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = PokemonModelo
         load_instance = True
+        include_relationship = True
 
     codigo_pokemon = fields.Integer(
         required=True,
@@ -45,6 +47,8 @@ class PokemonEsquema(ma.SQLAlchemyAutoSchema):
             "required": "El campo es obligatorio."
             }
     )
+
+    tipos = fields.Nested(TipoEsquema(many=True))
 
     
 
