@@ -8,10 +8,7 @@ app = Flask(__name__)
 
 
 
-
-
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:admin1234@127.0.0.1:5050/pokemon_db"
-app.config["JWT_SECRET_KEY"] = "admin-super-secret"
+app.config.from_object("configuracion.Configuracion")
 
 #iniciar las rutas
 RutasGeneral(api)
