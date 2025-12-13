@@ -2,6 +2,7 @@ from flask_restx import Namespace,Api
 from src.rutas.tipo_rutas import TipoRutas
 from src.rutas.pokemon_rutas import PokemonRutas
 from src.rutas.pokemon_x_tipo_rutas import PokemonXTipoRutas
+from src.rutas.inicio_sesion_rutas import InicioSesionRutas
 
 #como una funcion que recibe la 'api'
 def RutasGeneral(api:Api):
@@ -14,3 +15,5 @@ def RutasGeneral(api:Api):
 
     PokemonXTipoRutas(api)
 
+
+    InicioSesionRutas(api)
