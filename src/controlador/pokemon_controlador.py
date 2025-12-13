@@ -7,12 +7,14 @@ from marshmallow import ValidationError
 from src.documentacion.pokemon_documentacion import pokemon_documentacion
 from src.esquemas.pokemon_esquema import PokemonEsquema
 from src.modelo.pokemon_modelo import PokemonModelo
+from flask_jwt_extended import jwt_required 
 
 
 #eliminacion y busqueda por tipo por su codigo tipo
 class PokemonControladorPorCodigoPokemon(Resource):
 
     #select * from table condicion
+    @jwt_required()
     def get(self, codigo_pokemon:int):
         try:
             #buscar el elemento a ver si existe
@@ -35,6 +37,7 @@ class PokemonControladorPorCodigoPokemon(Resource):
 
 
     #delete from tabla condicion
+    @jwt_required()
     def delete(self, codigo_pokemon:int):
         try:
             #buscar el elemento a ver si existe
@@ -61,6 +64,7 @@ class PokemonControladorPorCodigoPokemon(Resource):
 class PokemonControlador(Resource):
 
     #Read
+    @jwt_required()
     def get(self):
         try:
             #select * from tipo
@@ -78,6 +82,7 @@ class PokemonControlador(Resource):
     
     #Create
     @api.expect(pokemon_documentacion)
+    @jwt_required()
     def post(self):
         try:
             #obtener tipo json
@@ -103,6 +108,7 @@ class PokemonControlador(Resource):
     
     #Update
     @api.expect(pokemon_documentacion)
+    @jwt_required()
     def put(self):
         #objeto y lo validar
         #select * from Pokemon where = 1

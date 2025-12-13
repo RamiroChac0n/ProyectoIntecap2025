@@ -7,12 +7,14 @@ from src.esquemas.tipo_esquema import TipoEsquema
 from src.comun.utilidades import api
 from src.documentacion.tipo_documentacion import tipo_documentacion
 from marshmallow import ValidationError
+from flask_jwt_extended import jwt_required
 
 
 #eliminacion y busqueda por tipo por su codigo tipo
 class TipoControladorPorCodigoTipo(Resource):
 
     #select * from table condicion
+    @jwt_required()
     def get(self, codigo_tipo:int):
         try:
             #buscar el elemento a ver si existe
@@ -35,6 +37,7 @@ class TipoControladorPorCodigoTipo(Resource):
 
 
     #delete from tabla condicion
+    @jwt_required()
     def delete(self, codigo_tipo:int):
         try:
             #buscar el elemento a ver si existe
@@ -61,6 +64,7 @@ class TipoControladorPorCodigoTipo(Resource):
 class TipoControlador(Resource):
 
     #Read
+    @jwt_required()
     def get(self):
         try:
             #select * from tipo
@@ -78,6 +82,7 @@ class TipoControlador(Resource):
     
     #Create
     @api.expect(tipo_documentacion)
+    @jwt_required()
     def post(self):
         try:
             #obtener tipo json
@@ -105,6 +110,7 @@ class TipoControlador(Resource):
     
     #Update
     @api.expect(tipo_documentacion)
+    @jwt_required()
     def put(self):
         #objeto y lo validar
         #select * from TipoModelo where = 1

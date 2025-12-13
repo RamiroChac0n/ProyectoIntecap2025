@@ -9,12 +9,14 @@ from marshmallow import ValidationError
 from src.modelo.pokemon_x_tipo_modelo import PokemonXTipoModelo
 from src.esquemas.pokemon_x_tipo_esquema import PokemonXTipoEsquema
 from src.documentacion.pokemon_x_tipo_documentacion import pokemon_x_tipo_documentacion
+from flask_jwt_extended import jwt_required
 
 
 class PokemonXTipoControlador(Resource):
 
 
     @api.expect(pokemon_x_tipo_documentacion)
+    @jwt_required()
     def post(self):
         try:
             #obtener tipo json
@@ -40,6 +42,7 @@ class PokemonXTipoControlador(Resource):
 
 class PokemonXTipoPorCodigosControlador(Resource):
 
+    @jwt_required()
     def delete(self,codigo_pokemon:int, codigo_tipo:int):
         try:
             #buscar el elemento a ver si existe
