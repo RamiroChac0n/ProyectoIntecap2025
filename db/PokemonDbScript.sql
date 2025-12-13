@@ -42,3 +42,16 @@ CREATE TABLE IF NOT EXISTS `pokemon_x_tipo` (
     FOREIGN KEY (`codigo_tipo`)
     REFERENCES `tipo` (`codigo_tipo`)
 );
+
+-- -----------------------------------------------------
+-- Table `usuario`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `usuario` (
+  `codigo_usuario` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(100) NOT NULL,
+  `apellido` VARCHAR(100) NOT NULL,
+  `correo` VARCHAR(100) NOT NULL,
+  `contrasenia` VARCHAR(60) NOT NULL,
+  PRIMARY KEY (`codigo_usuario`)
+  );
+
