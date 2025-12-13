@@ -7,6 +7,6 @@ from src.comun.utilidades import api
 
 
 inicio_sesion_doc = api.model('InicioSesionDoc',{
-    'usuario': fields.String(required=True,example='test'),
+    'correo': fields.String(required=True,example='test@test.com'),
     'contrasenia': fields.String(required=True,example='test'),
 })

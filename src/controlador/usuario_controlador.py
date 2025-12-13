@@ -14,6 +14,7 @@ from src.documentacion.usuario_documentacion import usuario_documentacion
 
 class UsuarioControlador(Resource):
 
+    @jwt_required()
     @api.expect(usuario_documentacion)
     def post(self):
         try:
@@ -34,6 +35,7 @@ class UsuarioControlador(Resource):
             print(err)
             return {"mensaje":"Algo salió mal, intentalo denuevo."},503 
 
+    @jwt_required()
     @api.expect(usuario_documentacion)
     def put(self):
         try:
@@ -62,6 +64,7 @@ class UsuarioControlador(Resource):
             print(err)
             return {"mensaje":"Algo salió mal, intentalo denuevo."},503 
     
+    @jwt_required()
     def get(self):
         try:
             #consultar todos los usuario
@@ -76,6 +79,7 @@ class UsuarioControlador(Resource):
 
 class UsuarioPorCodigoControlador(Resource):
 
+    @jwt_required()
     def get(self, codigo_usuario):
         try:
 
@@ -89,7 +93,7 @@ class UsuarioPorCodigoControlador(Resource):
             print(err)
             return {"mensaje":"Algo salió mal, intentalo denuevo."},503 
         
-    
+    @jwt_required()
     def delete(self,codigo_usuario):
         try:
 

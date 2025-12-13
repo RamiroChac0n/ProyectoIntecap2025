@@ -55,3 +55,4 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   PRIMARY KEY (`codigo_usuario`)
   );
 
+insert into usuario(nombre, apellido, correo, contrasenia) values("admin","admin","admin@gmail.com","admin1234");

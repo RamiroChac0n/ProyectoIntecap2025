@@ -1,8 +1,10 @@
 from flask import request
 from flask_restx import Resource
 from src.documentacion.inicio_sesion_documentacion import inicio_sesion_doc
-from src.comun.utilidades import api
+from src.comun.utilidades import api, db
 from flask_jwt_extended import create_access_token
+from src.modelo.usuario_modelo import UsuarioModelo
+from sqlalchemy.orm.exc import NoResultFound
 
 
 class InicioSesionControlador(Resource):
@@ -11,17 +13,21 @@ class InicioSesionControlador(Resource):
     def post(self):
         try:
             #obteniendo las credenciales del usuario
-            usuario = request.json['usuario']
+            correo = request.json['correo']
             contrasenia = request.json['contrasenia']
 
-            #validando las credenciales
-            if usuario != "test" or contrasenia != "test":
-                return {"msg": "El usuario y/o la contraseñ no son correctos"}, 401
+            #verificar que exista en la db
+            usuario = db.session.execute(
+                db.select(UsuarioModelo)
+                .where(UsuarioModelo.correo == correo)
+                .where(UsuarioModelo.contrasenia == contrasenia)).scalar_one()
+
 
             #retornanod el token
-            access_token = create_access_token(identity=usuario)
+            access_token = create_access_token(identity=usuario.codigo_usuario)
             return access_token, 200
-        
+        except NoResultFound as err:
+            return {"mensaje":"El usuario y/o la contraseñ no son correctos"},401 
         except Exception as err:
             return {"mensaje":"Algo salió mal, intentalo denuevo."},503 
 
